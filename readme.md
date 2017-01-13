@@ -27,7 +27,9 @@ require:
 * *cd search && npm install*  #(web interface)
 
 *scrapy spiders* supported follow schemes: ftp:// http:// and smb://
+
 *simple spiders* supported ftp:// and http:// schemes and samba (smbmount)
+
 and parsers: plaintext, xml, http, doc(x), xls(x), http, pdf, images, ziparchives, executable and raw
 
 ###www crawl (scrapy)
@@ -73,8 +75,11 @@ Similarly, you can index the content ftp-resources:
 ###www/ftp crawl (bash)
 
 Lightweight and portable variant.
+
 Identical functionality for crawling sites as presented in two bash-scripts spider.sh and crawl.sh.
+
 Scripts are wrappers around the gnu-utilities `wget` and `find` respectively. These utilities have a powerful engine and reliable enough to use.
+
 (only one site per spider)
 
 `cd ..`
@@ -233,16 +238,18 @@ offset and limit results:
 
 It is worth to remember about indexes. Data can be stored in isolated indexes. The index name is specified as the first directory in the path URN:
 
-~http://localhost:8080/someindex/~
+http://localhost:8080/someindex/
 
 or default
 
-~http://localhost:8080/~
+http://localhost:8080/
 
 search query as google-like syntax, example:
 
 "site:site.com intext:odbc ext:exe"
 
 ![click green href to cache view](demo/www1.png "search")
+
+view cache (click green uri)
 
 ![cache](demo/cache.png "cache")
