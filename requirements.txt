@@ -1,0 +1,10 @@
+elasticsearch==2.3.0
+lxml==3.6.4
+python_ntlm==1.1.0
+pyocr==0.4.1
+redis==2.10.5
+requests==2.8.1
+Scrapy==1.1.1
+six==1.10.0
+Twisted==16.3.0
+xlrd==1.0.0
