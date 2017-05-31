@@ -2,15 +2,13 @@
 ##*spiders*
 require:
 
-* *apt-get install redis-server*  #(scrapy spiders queue implementation) (optional)
+* *(optional) apt-get install redis-server*  #(scrapy spiders queue implementation)
 
-* *apt-get install tesseract-ocr*  #(text recognize) (optional)
+* *(optional) apt-get install tesseract-ocr*  #(text recognize)
 
-* *apt-get install catdoc*  #(.doc files - simple spiders)
+* *apt-get install catdoc*  #(.doc and .xls files - simple spiders)
 
-* *apt-get install xls2csv* 	#(.xls files - simple spiders)
-
-* *apt-get install pdf2text* 	#(.pdf files - simple spiders)
+* *apt-get install python-pdfminer* 	#(.pdf files - simple spiders)
 
 * *apt-get install radare2* 	#(get strings from executable - simple spiders)
 
@@ -20,7 +18,9 @@ require:
 
 * *apt-get install xdg-utils*  #(mimetypes - simple spiders)
 
-* *elasticsearch*  #(search machine) (needed)
+* *elasticsearch*  #(search machine)
+
+* */path/to/elasticsearch/elasticsearch-plugin install http://dl.bintray.com/content/imotov/elasticsearch-plugins/org/elasticsearch/elasticsearch-analysis-morphology/5.4.0/elasticsearch-analysis-morphology-5.4.0.zip* (for russian morphology)
 
 * *pip install -r requirements.txt*
 
@@ -78,7 +78,7 @@ Lightweight and portable variant.
 
 Identical functionality for crawling sites as presented in two bash-scripts spider.sh and crawl.sh.
 
-Scripts are wrappers around the gnu-utilities `wget` and `find` respectively. These utilities have a powerful engine and reliable enough to use.
+Scripts are wrappers around the GNU-utilities `wget` and `find` respectively. These utilities have a powerful engine and reliable enough to use.
 
 (only one site per spider)
 
@@ -116,7 +116,7 @@ Note, that imports elasticsearch optional. All collected information is stored i
 
 ###smb crawl (scrapy)
 
-Experimental!
+Unstable!
 
 `cd scrapy_spiders`
 

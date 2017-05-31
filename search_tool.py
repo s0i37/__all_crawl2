@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 import json
 from requests import get, post, put, delete
 from elasticsearch import Elasticsearch
@@ -58,9 +58,9 @@ SETTINGS = {
 					"index": "not_analyzed"
 				}
 			},
-			"_timestamp": {
-				"enabled":True
-			}
+			#"_timestamp": {
+			#	"enabled":True
+			#}
 		}
 	},
 	"settings": {
@@ -137,7 +137,7 @@ REPOSITORY = {
 }
 
 def init_index(index):
-	print post( "http://{netloc}/{index}".format( netloc=args.elasticsearch, index=index ), data=json.dumps(SETTINGS) ).content
+	print put( "http://{netloc}/{index}".format( netloc=args.elasticsearch, index=index ), data=json.dumps(SETTINGS) ).content
 
 def drop_index(index):
 	print delete( "http://{netloc}/{index}".format( netloc=args.elasticsearch, index=index ) ).content
