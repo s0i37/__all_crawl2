@@ -52,9 +52,9 @@ do
 			echo "<<<xml" >> "$index"
 			cat "$path" >> "$index"
 			;;
-		text/html)
+		*/*html*)
 			echo "<<<html" >> "$index"
-			lynx -nolist -dump "$path" >> "$index"
+			cat "$path" | lynx -nolist -dump -stdin >> "$index"
 			;;
 		text/*|*/*script)
 			echo "<<<text" >> "$index"
@@ -97,6 +97,19 @@ do
 			#tesseract "$path" stdout -l eng >> "$index"
 			#tesseract "$path" stdout -l rus >> "$index"
 			;;
+		message/*)
+			echo "<<<message" >> "$index"
+			mu view "$path" >> "$index"
+			temp=$(tempfile)
+			rm $temp && mkdir -p "$temp/$path"
+			cp "$path" "$temp/$path/"
+			munpack -t -f -C "$(realpath $temp/$path)" "$(basename $path)"
+			rm "$temp/$path/$(basename $path)"
+			ln -s "$(realpath $0)" "$temp/$(basename $0)"
+			ln -s "$(realpath $index)" "$temp/$index"
+			( cd "$temp"; "./$(basename $0)" "${index%.*}"; )
+			rm -r $temp
+			;;
 		application/octet-stream)
 			echo "<<<raw" >> "$index"
 			strings "$path" >> "$index"
@@ -106,8 +119,13 @@ do
 			binwalk "$path" >> "$index"
 			;;
 		*)
-			echo "<<<$mime" >> "$index"
-			file "$path" | grep text > /dev/null && cat "$path" >> "$index" || echo "$path $mime" >> unknown_mime.log
+			echo "<<<unknown" >> "$index"
+			file "$path" | grep text > /dev/null &&
+			cat "$path" >> "$index" ||
+			{
+				#strings "$path" >> "$index"
+				echo "$path $mime" >> unknown_mime.log
+			}
 			;;
 	esac
 	printf "\n" >> "$index"
