@@ -2,6 +2,7 @@ from urlparse import urlparse
 from re import escape, match
 from scrapy.exceptions import IgnoreRequest
 import logging
+import colorama
 
 logger = logging.getLogger(__name__)
 
@@ -26,4 +27,4 @@ class PrintError:
 
 	def process_exception(self, request, exception, spider):
 		logger.debug( exception.message )
-		print "[!] load %s : %s" % ( request.url, exception.message)
+		print colorama.Fore.RED + "[!] load %s : %s" % ( request.url, exception.message) + colorama.Fore.RESET

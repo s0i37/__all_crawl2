@@ -1,20 +1,13 @@
+import colorama
+
 ext = ['.txt','.ini','.conf','.cfg','.cnf']
 mimetypes = ['text/']
 
-def extract_text(response, item):
-	print '[debug] plaintext parser'
-	if not 'filetype' in item:
-		item['filetype'] = 'text'
-	item['intext'] = item['intext'] if 'intext' in item else ''
-	item['intext'] += response.body + ' '
-	return item
+def extract_text(content, items):
+	print colorama.Fore.LIGHTYELLOW_EX + '[plaintext parser]' + colorama.Fore.RESET ,
 
-if __name__ == '__main__':
-	from sys import argv
-	class Response:
-		body = ''
-		text = u''
-	with open( argv[1], 'rb ') as f:
-		Response.body = f.read()
-		for collector,text in extract_text( Response, {} ).items():
-			print "{}: {}".format( collector, text )
+	items['filetype'] = 'text'
+	items['intext'] = content
+	
+	print colorama.Fore.LIGHTGREEN_EX + "(%d words)" % len( items['intext'].split() ) + colorama.Fore.RESET
+	return items

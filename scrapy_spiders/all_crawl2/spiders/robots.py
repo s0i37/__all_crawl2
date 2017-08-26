@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import scrapy
 from all_crawl2.items import AllCrawl2Item
-from all_crawl2.parsers import parse
+from all_crawl2 import parsers
 
 from urlparse import urlparse
 from os.path import splitext, basename
@@ -35,6 +35,6 @@ class Robots(scrapy.spiders.SitemapSpider):
 		item['inurl'] = response.url
 		item['site'] = urlparse( response.url ).netloc.lower()
 		item['ext'] = splitext( urlparse( response.url ).path )[1][1:].lower()
-		item.update( parse.get_content( response, item ) )
+		item.update( parsers.get_content( response, item ) )
 		return item
 

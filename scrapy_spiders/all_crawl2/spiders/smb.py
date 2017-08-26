@@ -2,7 +2,7 @@
 import scrapy
 from scrapy.http.request import Request
 from all_crawl2.items import AllCrawl2Item
-from all_crawl2.parsers import parse
+from all_crawl2 import parsers
 
 from urlparse import urlparse
 from os.path import splitext, basename
@@ -11,7 +11,7 @@ import json
 from os.path import split
 from time import sleep
 
-from re import match
+import colorama
 
 class SmbSpider(scrapy.Spider):
 	name = "smb"
@@ -34,19 +34,20 @@ class SmbSpider(scrapy.Spider):
 
 	def parse(self, response):
 		#print "queued %d" % len(self.crawler.engine.slot.scheduler)
-		print "[*] open %s" % response.url
-		item = AllCrawl2Item()
-		item['inurl'] = response.url
-		item['site'] = urlparse( response.url ).netloc.lower()
-		item['ext'] = splitext( urlparse( response.url ).path )[1][1:].lower()
+		print colorama.Fore.GREEN + "[+] open %s" % (response.url,) + colorama.Fore.RESET ,
+		items = AllCrawl2Item()
+		items['inurl'] = response.url
+		items['site'] = urlparse( response.url ).netloc.lower()
+		items['ext'] = splitext( urlparse( response.url ).path )[1][1:].lower()
 		if not split(response.url)[1]:	# is dir
-			print '[debug] ls %s' % response.url
-			item["intext"] = ''
+			#item["intext"] = ''
 			for _file in json.loads( response.body ):
-				item["intext"] += _file + ' '
+				#item["intext"] += _file + ' '
 				yield Request( response.url + _file )
-			yield item
+			#for _item in item:
+			#	yield _item
 		else:	# is file
-			print '[debug] cat %s' % response.url
-			yield parse.get_content( response, item )
+			for item in parsers.get_content( response.body, items ):
+				yield item
+		print ''
 

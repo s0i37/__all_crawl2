@@ -90,8 +90,8 @@ class HrefsFromText:
 		links = set()
 		for result_entry in result:
 			if not isinstance(result_entry, scrapy.Request):
-				items = result_entry
-				for value_of_item in items.values():
+				item = result_entry
+				for value_of_item in item.values():
 					for word in value_of_item.split(' '):
 						for scheme in self.allowed_schemes:
 							if not scheme.lower() == 'smb':

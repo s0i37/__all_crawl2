@@ -85,10 +85,10 @@ do
 			#7z l "$path" | tail -n +13 >> "$index"
 			temp=$(tempfile)
 			rm $temp && mkdir -p "$temp/$path"
-			7z x "$path" -o"$temp/$path"
+			7z x "$path" -o"$temp/$path" 1> /dev/null 2> /dev/null
 			ln -s "$(realpath $0)" "$temp/$(basename $0)"
 			ln -s "$(realpath $index)" "$temp/$index"
-			( cd "$temp"; "./$(basename $0)" "${index%.*}"; )
+			( cd "$temp"; "./$(basename $0)" "$(dirname $1|cut -c 2-)/${index%.*}"; )
 			rm -r $temp
 			;;
 		image/*)

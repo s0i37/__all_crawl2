@@ -6,6 +6,7 @@ from pdfminer.pdfpage import PDFPage
 from io import BytesIO
 from PIL import Image
 import pyocr
+import colorama
 
 ext = ['.pdf']
 mimetypes = []
@@ -20,38 +21,32 @@ def __recognize(data):
 		print e
 	return text
 
-def extract_text(response, item):
-	print '[debug] pdf parser'
-	if not 'filetype' in item:
-		item['filetype'] = 'pdf'
-	item['intext'] = item['intext'] if 'intext' in item else ''
+def extract_text(content, items):
+	print colorama.Fore.LIGHTYELLOW_EX + '[pdf parser]' + colorama.Fore.RESET ,
+
+	items['filetype'] = 'pdf'
+	items['intext'] = ''
 	rsrcmgr = PDFResourceManager()
 	retstr = BytesIO()
-	device = TextConverter(rsrcmgr, retstr, codec='utf-8', laparams=LAParams())
+	device = TextConverter( rsrcmgr, retstr, codec='utf-8', laparams=LAParams() )
 	inter = PDFPageInterpreter(rsrcmgr, device)
-	for page in PDFPage.get_pages( BytesIO(response.body), set(), maxpages=0, password='', caching=True, check_extractable=True ):
+	for page in PDFPage.get_pages( BytesIO(content), set(), maxpages=0, password='', caching=True, check_extractable=True ):
 		inter.process_page(page)
 	text = retstr.getvalue()
 
-	device = PDFPageAggregator(rsrcmgr, laparams=LAParams())
-	inter = PDFPageInterpreter(rsrcmgr, device)
-	for page in PDFPage.get_pages( BytesIO(response.body), set(), maxpages=0, password='', caching=True, check_extractable=True ):
-		inter.process_page(page)
-		for layout in device.get_result():
-			if isinstance( layout, (LTImage,LTFigure) ):
-				for i in layout:
-					print '[debug] pdf recognize page'
-					print __recognize( i.stream.rawdata )
+	# try recognize
+	if not text.strip():
+		device = PDFPageAggregator( rsrcmgr, laparams=LAParams() )
+		inter = PDFPageInterpreter(rsrcmgr, device)
+		for page in PDFPage.get_pages( BytesIO(content), set(), maxpages=0, password='', caching=True, check_extractable=True ):
+			inter.process_page(page)
+			for layout in device.get_result():
+				if isinstance( layout, (LTImage,LTFigure) ):
+					for i in layout:
+						#print '[debug] pdf recognize page'
+						text = __recognize( i.stream.rawdata )
 	
-	item['intext'] += text + ' ' if text else ''
-	return item
-
-if __name__ == '__main__':
-	from sys import argv
-	class Response:
-		body = ''
-		text = u''
-	with open( argv[1], 'rb ') as f:
-		Response.body = f.read()
-		for collector,text in extract_text( Response, {} ).items():
-			print "{}: {}".format( collector, text )
+	items['intext'] += text + ' ' if text else ''
+	
+	print colorama.Fore.LIGHTGREEN_EX + "(%d words)" % len( items['intext'].split() ) + colorama.Fore.RESET
+	return items

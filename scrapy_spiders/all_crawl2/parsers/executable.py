@@ -1,23 +1,19 @@
 from subprocess import Popen, PIPE
+import colorama
 
-ext = ['.exe','.dll', '.msi']
-mimetypes = ['application/x-executable', 'application/x-dosexec', 'application/x-msi']
+ext = ['.exe','.dll', '.msi', 'msu']
+mimetypes = ['application/x-executable', 'application/x-dosexec', 'application/x-msi',
+	'application/.*']
 
-def extract_text(response, item):
-	print '[debug] exe parser'
-	if not 'filetype' in item:
-		item['filetype'] = 'exe'
-	item['intext'] = item['intext'] if 'intext' in item else ''
+def extract_text(content, items):
+	print colorama.Fore.LIGHTYELLOW_EX + '[executable parser]' + colorama.Fore.RESET, 
+
+	if not 'filetype' in items:
+		items['filetype'] = 'exe'
+	items['intext'] = items['intext'] if 'intext' in items else ''
 	proc = Popen( "strings", stdin=PIPE, stdout=PIPE )
-	item['intext'] += proc.communicate( input=response.body )[0].replace("\n"," ") + ' '
-	return item
+	items['intext'] += proc.communicate( input=content )[0].replace("\n"," ") + ' '
 
-if __name__ == '__main__':
-	from sys import argv
-	class Response:
-		body = ''
-		text = u''
-	with open( argv[1], 'rb ') as f:
-		Response.body = f.read()
-		for collector,text in extract_text( Response, {} ).items():
-			print "{}: {}".format( collector, text )
+	print colorama.Fore.LIGHTGREEN_EX + "(%d words)" % len( items['intext'].split() ) + colorama.Fore.RESET
+	return items
+

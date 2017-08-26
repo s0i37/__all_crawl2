@@ -31,11 +31,14 @@ DEPTH_LIMIT = 5
 DEPTH_PRIORITY = -1
 
 DOWNLOAD_HANDLERS = {
-	'file': 'scrapy.core.downloader.handlers.file.FileDownloadHandler',
+	#'file': 'scrapy.core.downloader.handlers.file.FileDownloadHandler',
+	'file': 'all_crawl2.handlers.file.FileHandler',
 	'http': 'scrapy.core.downloader.handlers.http.HTTPDownloadHandler',
 	'https': 'scrapy.core.downloader.handlers.http.HTTPDownloadHandler',
-	'ftp': 'all_crawl2.handlers.ftp.FtpListingHandler',
-	'smb': 'all_crawl2.handlers.samba.SmbHandler'
+	#'ftp': 'all_crawl2.handlers.ftp.FtpListingHandler',
+	'ftp': 'scrapy.core.downloader.handlers.ftp.FTPDownloadHandler',
+	'smb': 'all_crawl2.handlers.samba.SmbHandler',
+	'imap': 'all_crawl2.handlers.imap.ImapHandler',
 }
 
 
@@ -79,7 +82,7 @@ SPIDER_MIDDLEWARES = {
 	'scrapy.spidermiddlewares.offsite.OffsiteMiddleware': 1,
 	'all_crawl2.spidermiddlewares.filters.PrintError': 2
 }
-ALLOWED_SCHEMES = ["http", "https", "ftp", "smb"]
+ALLOWED_SCHEMES = ["http", "https", "ftp", "smb", "imap"]
 LOG_EXTERNAL_LINKS = False
 REFERER_ENABLED = True
 

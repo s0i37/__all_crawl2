@@ -2,7 +2,7 @@
 import scrapy
 from scrapy.http.request import Request
 from all_crawl2.items import AllCrawl2Item
-from all_crawl2.parsers import parse
+from all_crawl2 import parsers
 
 from urlparse import urlparse
 import json
@@ -51,5 +51,5 @@ class FtpSpider(scrapy.Spider):
 			item['inurl'] = response.url
 			item['site'] = urlparse( response.url ).netloc.lower()
 			item['ext'] = splitext( urlparse( response.url ).path )[1][1:].lower()
-			yield parse.get_content( response, item )
+			yield parsers.get_content( response, item )
 

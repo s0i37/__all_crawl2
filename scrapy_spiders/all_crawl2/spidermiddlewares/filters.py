@@ -2,6 +2,7 @@ import scrapy
 from urlparse import urlparse
 from re import escape, match
 import logging
+import colorama
 
 logger = logging.getLogger(__name__)
 
@@ -55,4 +56,4 @@ class PrintError:
 
 	def process_spider_exception(self, response, exception, spider):
 		logger.debug( exception.message )
-		print "[!] parse %s : %s" % ( spider.name, exception.message )
+		print colorama.Fore.RED + "[!] parse %s : %s" % ( spider.name, exception.message ) + colorama.Fore.RESET

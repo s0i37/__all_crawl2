@@ -1,23 +1,17 @@
 from subprocess import Popen, PIPE
+import colorama
 
 ext = ['.img','.bin']
 mimetypes = ['application/octet-stream']
 
-def extract_text(response, item):
-	print '[debug] raw parser'
-	if not 'filetype' in item:
-		item['filetype'] = 'raw'
-	item['intext'] = item['intext'] if 'intext' in item else ''
-	proc = Popen( "strings", stdin=PIPE, stdout=PIPE )
-	item['intext'] += proc.communicate( input=response.body )[0].replace("\n"," ") + ' '
-	return item
+def extract_text(content, items):
+	print colorama.Fore.LIGHTYELLOW_EX + '[raw parser]' + colorama.Fore.RESET, 
 
-if __name__ == '__main__':
-	from sys import argv
-	class Response:
-		body = ''
-		text = u''
-	with open( argv[1], 'rb ') as f:
-		Response.body = f.read()
-		for collector,text in extract_text( Response, {} ).items():
-			print "{}: {}".format( collector, text )
+	if not 'filetype' in items:
+		items['filetype'] = 'raw'
+	items['intext'] = items['intext'] if 'intext' in items else ''
+	proc = Popen( "strings", stdin=PIPE, stdout=PIPE )
+	items['intext'] += proc.communicate( input=content )[0].replace("\n"," ") + ' '
+
+	print colorama.Fore.LIGHTGREEN_EX + "(%d words)" % len( items['intext'].split() ) + colorama.Fore.RESET
+	return items
